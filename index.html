@@ -9,13 +9,14 @@
 
     <style>
         #calculator-page { display: none; }
-        #results-card    { display: none; }
-        #email-error     { display: none; }
+        #results-card { display: none; }
+        #email-error { display: none; }
 
         @keyframes fade-in {
             from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: translateY(0); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
         .fade-in { animation: fade-in 0.45s ease-out forwards; }
 
         body {
@@ -39,13 +40,15 @@
             mix-blend-mode: screen;
             animation: orb-pulse 6s ease-in-out infinite alternate;
         }
+
         @keyframes orb-pulse {
             from { transform: scale(1); opacity: .40; }
-            to   { transform: scale(1.12); opacity: .55; }
+            to { transform: scale(1.12); opacity: .55; }
         }
-        .orb-red   { background:#E22428; width:50vw; height:50vw; top:-10%; left:-10%; animation-delay:0s; }
+
+        .orb-red { background:#E22428; width:50vw; height:50vw; top:-10%; left:-10%; animation-delay:0s; }
         .orb-green { background:#007A4D; width:60vw; height:60vw; bottom:-10%; right:-10%; animation-delay:2s; }
-        .orb-gold  { background:#FBB613; width:40vw; height:40vw; top:40%; left:30%; animation-delay:4s; }
+        .orb-gold { background:#FBB613; width:40vw; height:40vw; top:40%; left:30%; animation-delay:4s; }
 
         .glass-panel {
             background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.02) 100%);
@@ -189,7 +192,6 @@
     <div class="orb orb-gold"></div>
 
     <div class="card glass-panel">
-
         <div style="text-align:center; padding:2.5rem 2rem 1.5rem; border-bottom:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.2);">
             <h1 style="font-size:2.5rem; font-weight:900; text-transform:uppercase; letter-spacing:-.02em; margin:0 0 .5rem;" class="grad-text">
                 Melanin Unity
@@ -200,7 +202,6 @@
         </div>
 
         <div style="padding:2rem;">
-
             <div id="landing-page">
                 <div style="text-align:center; margin-bottom:1.5rem;">
                     <div class="glass-raised" style="display:inline-flex; align-items:center; justify-content:center; padding:.75rem; border-radius:9999px; margin-bottom:.75rem;">
@@ -337,226 +338,120 @@
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 
-<script>
-(function () {
-    function initIcons() {
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-    }
-
-    var emailInput    = document.getElementById('email-input');
-    var emailError    = document.getElementById('email-error');
-    var submitBtn     = document.getElementById('submit-btn');
-    var landingPage   = document.getElementById('landing-page');
-    var calcPage      = document.getElementById('calculator-page');
-    var expInput      = document.getElementById('expenses');
-    var savInput      = document.getElementById('savings');
-    var incInput      = document.getElementById('income');
-    var resultsCard   = document.getElementById('results-card');
-    var resFreedomNum = document.getElementById('res-freedom-num');
-    var resMoPayout   = document.getElementById('res-monthly-payout');
-    var resYrPayout   = document.getElementById('res-yearly-payout');
-    var resMoInv      = document.getElementById('res-monthly-inv');
-    var resYears      = document.getElementById('res-years');
-    var wtmFreedom    = document.getElementById('wtm-freedom-num');
-    var wtmPayout     = document.getElementById('wtm-monthly-payout');
-    var shareBtn      = document.getElementById('share-btn');
-
-    function fmt(n) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        }).format(n);
-    }
-
-    function isEmail(v) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-    }
-
-    function calc() {
-        var exp = parseFloat(expInput.value) || 0;
-        var sav = parseFloat(savInput.value) || 0;
-        var inc = parseFloat(incInput.value) || 0;
-
-        if (exp <= 0) {
-            resultsCard.style.display = 'none';
-            return;
-        }
-
-        var freedom  = exp * 12 * 25;
-        var moPayout = freedom * 0.04 / 12;
-        var yrPayout = freedom * 0.04;
-        var moInvest = Math.max(0, inc - exp);
-
-        var yearsLabel;
-
-        if (sav >= freedom) {
-            yearsLabel = 'Already free! 🎉';
-        } else if (moInvest <= 0) {
-            yearsLabel = 'Increase income or cut expenses';
-        } else {
-            var r = 0.08 / 12;
-            var n = Math.log((((freedom - sav) * r) / moInvest) + 1) / Math.log(1 + r);
-            var y = Math.ceil(n / 12);
-            yearsLabel = isFinite(y) ? y + ' year' + (y !== 1 ? 's' : '') : 'Very long time';
-        }
-
-        resFreedomNum.textContent = fmt(freedom);
-        resMoPayout.textContent   = fmt(moPayout);
-<script>
-(function () {
-    function initIcons() {
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-    }
-
-    var emailInput    = document.getElementById('email-input');
-    var emailError    = document.getElementById('email-error');
-    var submitBtn     = document.getElementById('submit-btn');
-    var landingPage   = document.getElementById('landing-page');
-    var calcPage      = document.getElementById('calculator-page');
-    var expInput      = document.getElementById('expenses');
-    var savInput      = document.getElementById('savings');
-    var incInput      = document.getElementById('income');
-    var resultsCard   = document.getElementById('results-card');
-    var resFreedomNum = document.getElementById('res-freedom-num');
-    var resMoPayout   = document.getElementById('res-monthly-payout');
-    var resYrPayout   = document.getElementById('res-yearly-payout');
-    var resMoInv      = document.getElementById('res-monthly-inv');
-    var resYears      = document.getElementById('res-years');
-    var wtmFreedom    = document.getElementById('wtm-freedom-num');
-    var wtmPayout     = document.getElementById('wtm-monthly-payout');
-    var shareBtn      = document.getElementById('share-btn');
-
-    function fmt(n) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        }).format(n);
-    }
-
-    function isEmail(v) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-    }
-
-    function calc() {
-        var exp = parseFloat(expInput.value) || 0;
-        var sav = parseFloat(savInput.value) || 0;
-        var inc = parseFloat(incInput.value) || 0;
-
-        if (exp <= 0) {
-            resultsCard.style.display = 'none';
-            return;
-        }
-
-        var freedom  = exp * 12 * 25;
-        var moPayout = freedom * 0.04 / 12;
-        var yrPayout = freedom * 0.04;
-        var moInvest = Math.max(0, inc - exp);
-
-        var yearsLabel;
-
-        if (sav >= freedom) {
-            yearsLabel = 'Already free! 🎉';
-        } else if (moInvest <= 0) {
-            yearsLabel = 'Increase income or cut expenses';
-        } else {
-            var r = 0.08 / 12;
-            var n = Math.log((((freedom - sav) * r) / moInvest) + 1) / Math.log(1 + r);
-            var y = Math.ceil(n / 12);
-            yearsLabel = isFinite(y) ? y + ' year' + (y !== 1 ? 's' : '') : 'Very long time';
-        }
-
-        resFreedomNum.textContent = fmt(freedom);
-        resMoPayout.textContent   = fmt(moPayout);
-        resYrPayout.textContent   = fmt(yrPayout);
-        resMoInv.textContent      = fmt(moInvest);
-        resYears.textContent      = yearsLabel;
-        wtmFreedom.textContent    = fmt(freedom);
-        wtmPayout.textContent     = fmt(moPayout);
-
-        resultsCard.style.display = 'block';
-    }
-
-    function showCalculator() {
-        landingPage.style.display = 'none';
-        calcPage.style.display = 'block';
-        calcPage.classList.add('fade-in');
-        calc();
-        initIcons();
-    }
-
-    submitBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var val = emailInput.value.trim();
-
-        if (!val || !isEmail(val)) {
-            emailError.style.display = 'block';
-            return;
-        }
-
-        emailError.style.display = 'none';
-        showCalculator();
-
-        fetch('https://formspree.io/f/mykggoqy', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: val,
-                source: 'Melanin Unity Freedom Calculator'
-            })
-        }).catch(function () {});
-    });
-
-    emailInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            submitBtn.click();
-        }
-    });
-
-    expInput.addEventListener('input', calc);
-    savInput.addEventListener('input', calc);
-    incInput.addEventListener('input', calc);
-
-    if (shareBtn) {
-        shareBtn.addEventListener('click', function () {
-            var text = 'My Freedom Number is ' + resFreedomNum.textContent;
-
-            if (navigator.share) {
-                navigator.share({
-                    title: 'My Freedom Number',
-                    text: text,
-                    url: window.location.href
-                }).catch(function () {});
-            } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(function () {
-                    alert('Result copied to clipboard!');
-                }).catch(function () {
-                    alert(text);
-                });
-            } else {
-                alert(text);
+    <script>
+    (function () {
+        function initIcons() {
+            if (window.lucide) {
+                lucide.createIcons();
             }
-        });
-    }
+        }
 
-    initIcons();
-})();
-</script>
-</script>
-</body>
-</html>
+        var emailInput = document.getElementById('email-input');
+        var emailError = document.getElementById('email-error');
+        var submitBtn = document.getElementById('submit-btn');
+        var landingPage = document.getElementById('landing-page');
+        var calcPage = document.getElementById('calculator-page');
+        var expInput = document.getElementById('expenses');
+        var savInput = document.getElementById('savings');
+        var incInput = document.getElementById('income');
+        var resultsCard = document.getElementById('results-card');
+        var resFreedomNum = document.getElementById('res-freedom-num');
+        var resMoPayout = document.getElementById('res-monthly-payout');
+        var resYrPayout = document.getElementById('res-yearly-payout');
+        var resMoInv = document.getElementById('res-monthly-inv');
+        var resYears = document.getElementById('res-years');
+        var wtmFreedom = document.getElementById('wtm-freedom-num');
+        var wtmPayout = document.getElementById('wtm-monthly-payout');
+        var shareBtn = document.getElementById('share-btn');
+
+        function fmt(n) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            }).format(n);
+        }
+
+        function isEmail(v) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+        }
+
+        function calc() {
+            var exp = parseFloat(expInput.value) || 0;
+            var sav = parseFloat(savInput.value) || 0;
+            var inc = parseFloat(incInput.value) || 0;
+
+            if (exp <= 0) {
+                resultsCard.style.display = 'none';
+                return;
+            }
+
+            var freedom = exp * 12 * 25;
+            var moPayout = freedom * 0.04 / 12;
+            var yrPayout = freedom * 0.04;
+            var moInvest = Math.max(0, inc - exp);
+
+            var yearsLabel;
+
+            if (sav >= freedom) {
+                yearsLabel = 'Already free! 🎉';
+            } else if (moInvest <= 0) {
+                yearsLabel = 'Increase income or cut expenses';
+            } else {
+                var r = 0.08 / 12;
+                var n = Math.log((((freedom - sav) * r) / moInvest) + 1) / Math.log(1 + r);
+                var y = Math.ceil(n / 12);
+                yearsLabel = isFinite(y) ? y + ' year' + (y !== 1 ? 's' : '') : 'Very long time';
+            }
+
+            resFreedomNum.textContent = fmt(freedom);
+            resMoPayout.textContent = fmt(moPayout);
+            resYrPayout.textContent = fmt(yrPayout);
+            resMoInv.textContent = fmt(moInvest);
+            resYears.textContent = yearsLabel;
+            wtmFreedom.textContent = fmt(freedom);
+            wtmPayout.textContent = fmt(moPayout);
+
+            resultsCard.style.display = 'block';
+        }
+
+        function showCalculator() {
+            landingPage.style.display = 'none';
+            calcPage.style.display = 'block';
+            calcPage.classList.add('fade-in');
+            calc();
+            initIcons();
+        }
+
+        submitBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var val = emailInput.value.trim();
+
+            if (!val || !isEmail(val)) {
+                emailError.style.display = 'block';
+                return;
+            }
+
+            emailError.style.display = 'none';
+            showCalculator();
+
+            fetch('https://formspree.io/f/mykggoqy', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: val,
+                    source: 'Melanin Unity Freedom Calculator'
+                })
+            }).catch(function () {});
+        });
+
+        emailInput.addEventListener('keydown', function (e) {
+        
