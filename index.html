@@ -4,394 +4,429 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Melanin Unity - Freedom Number Calculator</title>
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        #calculator-page { display: none; }
+        #results-card    { display: none; }
+        #email-error     { display: none; }
+
         @keyframes fade-in {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fade-in 0.45s ease-out forwards; }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-x: hidden;
+            margin: 0;
         }
 
-        .animate-fade-in {
-            animation: fade-in 0.4s ease-out forwards;
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            mix-blend-mode: screen;
+            animation: orb-pulse 6s ease-in-out infinite alternate;
         }
+        @keyframes orb-pulse {
+            from { transform: scale(1);    opacity: .40; }
+            to   { transform: scale(1.12); opacity: .55; }
+        }
+        .orb-red   { background:#E22428; width:50vw; height:50vw; top:-10%;    left:-10%;  animation-delay:0s; }
+        .orb-green { background:#007A4D; width:60vw; height:60vw; bottom:-10%; right:-10%; animation-delay:2s; }
+        .orb-gold  { background:#FBB613; width:40vw; height:40vw; top:40%;     left:30%;   animation-delay:4s; }
 
         .glass-panel {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.02) 100%);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow:
-                0 20px 40px -10px rgba(0, 0, 0, 0.7),
-                inset 0 1px 2px rgba(255, 255, 255, 0.5),
-                inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,.1);
+            border-top: 1px solid rgba(255,255,255,.5);
+            border-left: 1px solid rgba(255,255,255,.3);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,.7),
+                        inset 0 1px 2px rgba(255,255,255,.5),
+                        inset 0 -1px 2px rgba(0,0,0,.2);
         }
-
         .glass-raised {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,.02) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow:
-                0 6px 15px -5px rgba(0, 0, 0, 0.4),
-                inset 0 1px 1px rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,.05);
+            border-top: 1px solid rgba(255,255,255,.25);
+            border-left: 1px solid rgba(255,255,255,.15);
+            box-shadow: 0 6px 15px -5px rgba(0,0,0,.4),
+                        inset 0 1px 1px rgba(255,255,255,.2);
         }
-
         .glass-recessed {
-            background: rgba(0, 0, 0, 0.35);
+            background: rgba(0,0,0,.35);
             border: 1px solid transparent;
-            border-top: 1px solid rgba(0, 0, 0, 0.8);
-            border-left: 1px solid rgba(0, 0, 0, 0.6);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.7);
-            color: white;
-            transition: all 0.3s ease;
+            border-top: 1px solid rgba(0,0,0,.8);
+            border-left: 1px solid rgba(0,0,0,.6);
+            border-bottom: 1px solid rgba(255,255,255,.15);
+            border-right: 1px solid rgba(255,255,255,.05);
+            box-shadow: inset 0 4px 10px rgba(0,0,0,.7);
+            color: #fff;
+            width: 100%;
+            border-radius: .75rem;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            transition: all .3s ease;
+            box-sizing: border-box;
         }
-
+        .glass-recessed::placeholder { color: #9ca3af; }
         .glass-recessed:focus {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,.5);
             border-bottom: 1px solid #FBB613;
-            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.8), 0 2px 15px rgba(251, 182, 19, 0.25);
+            box-shadow: inset 0 4px 10px rgba(0,0,0,.8), 0 2px 15px rgba(251,182,19,.25);
             outline: none;
         }
 
-        .gel-button {
-            background: linear-gradient(180deg, #00A166 0%, #007A4D 100%);
+        .gel-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: .75rem;
             border: 1px solid #005A39;
             border-top: 1px solid #00D285;
-            box-shadow:
-                0 8px 20px -5px rgba(0, 122, 77, 0.6),
-                inset 0 2px 2px rgba(255, 255, 255, 0.5),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s ease;
+            background: linear-gradient(180deg, #00A166 0%, #007A4D 100%);
+            box-shadow: 0 8px 20px -5px rgba(0,122,77,.6),
+                        inset 0 2px 2px rgba(255,255,255,.5),
+                        inset 0 -2px 4px rgba(0,0,0,.2);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
+            transition: all .2s ease;
+            text-shadow: 0 1px 2px rgba(0,0,0,.3);
+            box-sizing: border-box;
         }
-
-        .gel-button:hover {
+        .gel-btn:hover {
             background: linear-gradient(180deg, #00B373 0%, #008F5A 100%);
             transform: translateY(-2px);
-            box-shadow:
-                0 12px 25px -5px rgba(0, 122, 77, 0.8),
-                inset 0 2px 2px rgba(255, 255, 255, 0.6),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.2);
         }
-
-        .gel-button:active {
+        .gel-btn:active {
             background: linear-gradient(180deg, #007A4D 0%, #006B44 100%);
             transform: translateY(1px);
-            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.6);
-            border-top: 1px solid #005A39;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,.6);
         }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: .75rem 1rem;
+            border-radius: .75rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #fff;
+            background: transparent;
+            border: none;
+            transition: background .2s ease;
+            box-sizing: border-box;
+        }
+        .share-btn:hover { background: rgba(255,255,255,.1); }
+
+        .card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 36rem;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: .75rem;
+            border-radius: .5rem;
+            margin-bottom: .5rem;
+        }
+
+        .grad-text {
+            background: linear-gradient(90deg, #E22428, #FBB613, #007A4D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        input[type=number]                            { -moz-appearance: textfield; }
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
     </style>
 </head>
-<body class="bg-black text-white font-sans overflow-x-hidden min-h-screen relative flex items-center justify-center p-4">
+<body>
 
-    <!-- Dynamic Pan-African Background Orbs -->
-    <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#E22428] rounded-full mix-blend-screen filter blur-[120px] opacity-50 animate-pulse pointer-events-none"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-[#007A4D] rounded-full mix-blend-screen filter blur-[130px] opacity-50 animate-pulse pointer-events-none" style="animation-delay: 2s;"></div>
-    <div class="fixed top-[40%] left-[30%] w-[40vw] h-[40vw] bg-[#FBB613] rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-pulse pointer-events-none" style="animation-delay: 4s;"></div>
+    <div class="orb orb-red"></div>
+    <div class="orb orb-green"></div>
+    <div class="orb orb-gold"></div>
 
-    <!-- Main Container -->
-    <div class="relative z-10 w-full max-w-xl glass-panel rounded-3xl overflow-hidden my-8">
+    <div class="card glass-panel">
 
         <!-- Header -->
-        <div class="text-center pt-10 pb-6 px-8 border-b border-white/10 bg-black/20">
-            <h1 class="font-black text-4xl md:text-5xl tracking-tight uppercase bg-gradient-to-r from-[#E22428] via-[#FBB613] to-[#007A4D] text-transparent bg-clip-text drop-shadow-lg">
+        <div style="text-align:center; padding:2.5rem 2rem 1.5rem; border-bottom:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.2);">
+            <h1 style="font-size:2.5rem; font-weight:900; text-transform:uppercase; letter-spacing:-.02em; margin:0 0 .5rem;" class="grad-text">
                 Melanin Unity
             </h1>
-            <p class="text-gray-300 mt-2 text-sm font-medium tracking-wide">Economic Empowerment &amp; Self-Discovery</p>
+            <p style="color:#d1d5db; font-size:.875rem; font-weight:500; letter-spacing:.05em; margin:0;">
+                Economic Empowerment &amp; Self-Discovery
+            </p>
         </div>
 
-        <div class="p-8">
+        <div style="padding:2rem;">
 
-            <!-- LANDING PAGE -->
-            <div id="landing-page" class="space-y-6 animate-fade-in">
-                <div class="text-center space-y-4">
-                    <div class="inline-flex items-center justify-center p-3 glass-raised rounded-full mb-2">
-                        <i data-lucide="unlock" class="w-6 h-6 text-[#FBB613]"></i>
+            <!-- ══════════ LANDING PAGE ══════════ -->
+            <div id="landing-page">
+                <div style="text-align:center; margin-bottom:1.5rem;">
+                    <div class="glass-raised" style="display:inline-flex; align-items:center; justify-content:center; padding:.75rem; border-radius:9999px; margin-bottom:.75rem;">
+                        <i data-lucide="unlock" style="width:1.5rem; height:1.5rem; color:#FBB613;"></i>
                     </div>
-
-                    <h2 class="text-3xl font-bold leading-tight">
-                        Discover Your <span class="text-[#FBB613]">Freedom Number</span>
+                    <h2 style="font-size:1.75rem; font-weight:800; line-height:1.2; margin:.5rem 0;">
+                        Discover Your <span style="color:#FBB613;">Freedom Number</span>
                     </h2>
-
-                    <p class="text-gray-300 text-lg leading-relaxed drop-shadow-sm">
+                    <p style="color:#d1d5db; font-size:1.05rem; line-height:1.6; margin:.75rem 0;">
                         Most people have no idea how much money they actually need to become financially free. Find out in exactly 5 seconds.
                     </p>
-
-                    <div class="inline-block bg-[#007A4D]/20 border border-[#007A4D]/50 text-[#007A4D] font-bold px-4 py-1.5 rounded-full text-sm mt-2 shadow-[0_2px_10px_rgba(0,122,77,0.2)]">
+                    <div style="display:inline-block; background:rgba(0,122,77,.2); border:1px solid rgba(0,122,77,.5); color:#00A166; font-weight:700; padding:.375rem 1rem; border-radius:9999px; font-size:.8rem; margin-top:.5rem;">
                         100% FREE TOOL
                     </div>
                 </div>
 
-                <div class="glass-raised p-6 rounded-2xl mt-6">
-                    <h3 class="text-center font-semibold mb-4 text-gray-200 drop-shadow-sm">
+                <!-- NO <form> TAG — plain divs only -->
+                <div class="glass-raised" style="padding:1.5rem; border-radius:1rem; margin-top:1rem;">
+                    <h3 style="text-align:center; font-weight:600; margin:0 0 1rem; color:#e5e7eb;">
                         Where should we send your results &amp; insights?
                     </h3>
 
-                    <div id="opt-in-container" class="space-y-4">
-                        <div>
-                            <input
-                                type="email"
-                                id="email-input"
-                                name="email"
-                                required
-                                placeholder="Enter your email address"
-                                class="w-full glass-recessed rounded-xl px-5 py-4 placeholder-gray-400"
-                            />
-                        </div>
-
-                        <p id="email-error" class="text-[#E22428] text-sm text-center font-medium hidden drop-shadow-md">
-                            Please enter a valid email address.
-                        </p>
-
-                        <button
-                            id="submit-btn"
-                            type="button"
-                            class="w-full gel-button text-white font-bold text-lg rounded-xl px-5 py-4 flex items-center justify-center"
-                        >
-                            <span class="flex items-center">
-                                Unlock My Calculator
-                                <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
-                            </span>
-                        </button>
-
-                        <p class="text-xs text-center text-gray-400 flex items-center justify-center mt-3 drop-shadow-sm">
-                            <i data-lucide="shield" class="w-3 h-3 mr-1"></i>
-                            Your information is secure. No spam, ever.
-                        </p>
+                    <div style="margin-bottom:1rem;">
+                        <input type="email" id="email-input" placeholder="Enter your email address" class="glass-recessed" />
                     </div>
+
+                    <p id="email-error" style="color:#E22428; font-size:.875rem; text-align:center; font-weight:500; margin:-.5rem 0 .75rem;">
+                        Please enter a valid email address.
+                    </p>
+
+                    <!-- type="button" AND no parent form = can never submit -->
+                    <button id="submit-btn" type="button" class="gel-btn">
+                        Unlock My Calculator
+                        <i data-lucide="arrow-right" style="width:1.25rem; height:1.25rem; margin-left:.5rem;"></i>
+                    </button>
+
+                    <p style="font-size:.75rem; text-align:center; color:#9ca3af; display:flex; align-items:center; justify-content:center; margin-top:.75rem;">
+                        <i data-lucide="shield" style="width:.875rem; height:.875rem; margin-right:.25rem;"></i>
+                        Your information is secure. No spam, ever.
+                    </p>
                 </div>
             </div>
 
-            <!-- CALCULATOR PAGE -->
-            <div id="calculator-page" class="space-y-6 hidden">
-                <div class="text-center mb-6">
-                    <div class="inline-flex items-center justify-center p-3 glass-raised rounded-full mb-3">
-                        <i data-lucide="unlock" class="w-6 h-6 text-[#FBB613]"></i>
+            <!-- ══════════ CALCULATOR PAGE ══════════ -->
+            <div id="calculator-page">
+                <div style="text-align:center; margin-bottom:1.5rem;">
+                    <div class="glass-raised" style="display:inline-flex; align-items:center; justify-content:center; padding:.75rem; border-radius:9999px; margin-bottom:.75rem;">
+                        <i data-lucide="calculator" style="width:1.5rem; height:1.5rem; color:#FBB613;"></i>
                     </div>
-                    <h2 class="text-2xl font-bold">The Freedom Calculator</h2>
-                    <p class="text-gray-300 text-sm mt-1 drop-shadow-sm">
-                        Find out exactly what it takes to escape the rat race.
-                    </p>
+                    <h2 style="font-size:1.5rem; font-weight:800; margin:.25rem 0;">The Freedom Calculator</h2>
+                    <p style="color:#d1d5db; font-size:.9rem; margin:0;">Find out exactly what it takes to escape the rat race.</p>
                 </div>
 
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200 mb-1.5 flex items-center drop-shadow-sm">
-                            <i data-lucide="dollar-sign" class="w-4 h-4 mr-1 text-[#E22428]"></i>
-                            Monthly Expenses
-                        </label>
-                        <input
-                            type="number"
-                            id="expenses"
-                            value="3000"
-                            placeholder="e.g. 3000"
-                            class="w-full glass-recessed rounded-xl px-4 py-3"
-                        />
+                <div style="margin-bottom:1.25rem;">
+                    <label style="display:flex; align-items:center; font-size:.875rem; font-weight:500; color:#e5e7eb; margin-bottom:.5rem;">
+                        <i data-lucide="dollar-sign" style="width:1rem; height:1rem; margin-right:.25rem; color:#E22428;"></i>
+                        Monthly Expenses
+                    </label>
+                    <input type="number" id="expenses" value="3000" class="glass-recessed" />
+                </div>
+
+                <div style="margin-bottom:1.25rem;">
+                    <label style="display:flex; align-items:center; font-size:.875rem; font-weight:500; color:#e5e7eb; margin-bottom:.5rem;">
+                        <i data-lucide="target" style="width:1rem; height:1rem; margin-right:.25rem; color:#FBB613;"></i>
+                        Current Savings / Investments
+                    </label>
+                    <input type="number" id="savings" value="15000" class="glass-recessed" />
+                </div>
+
+                <div style="margin-bottom:1.5rem;">
+                    <label style="display:flex; align-items:center; font-size:.875rem; font-weight:500; color:#e5e7eb; margin-bottom:.5rem;">
+                        <i data-lucide="trending-up" style="width:1rem; height:1rem; margin-right:.25rem; color:#007A4D;"></i>
+                        Monthly Income (After Tax)
+                    </label>
+                    <input type="number" id="income" value="5000" class="glass-recessed" />
+                </div>
+
+                <div id="results-card" class="glass-panel" style="border-radius:1rem; padding:1.5rem; position:relative; overflow:hidden;">
+                    <div style="position:absolute; top:0; right:0; width:10rem; height:10rem; background:#FBB613; opacity:.12; border-radius:50%; filter:blur(40px); pointer-events:none;"></div>
+
+                    <p style="text-align:center; font-size:.75rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:#d1d5db; margin:0 0 .5rem;">
+                        Your Freedom Number
+                    </p>
+                    <div id="res-freedom-num" style="font-size:3rem; font-weight:900; text-align:center; margin-bottom:1.5rem; text-shadow:0 4px 10px rgba(0,0,0,.5);">
+                        $0
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200 mb-1.5 flex items-center drop-shadow-sm">
-                            <i data-lucide="target" class="w-4 h-4 mr-1 text-[#FBB613]"></i>
-                            Current Savings/Investments
-                        </label>
-                        <input
-                            type="number"
-                            id="savings"
-                            value="15000"
-                            placeholder="e.g. 15000"
-                            class="w-full glass-recessed rounded-xl px-4 py-3"
-                        />
+                    <div class="result-row glass-raised">
+                        <span style="color:#d1d5db; font-size:.875rem;">Monthly Payout</span>
+                        <span id="res-monthly-payout" style="font-weight:700; color:#FBB613;">$0</span>
+                    </div>
+                    <div class="result-row glass-raised">
+                        <span style="color:#d1d5db; font-size:.875rem;">Yearly Payout</span>
+                        <span id="res-yearly-payout" style="font-weight:700; color:#FBB613;">$0</span>
+                    </div>
+                    <p style="font-size:.75rem; color:#9ca3af; text-align:center; margin:.25rem 0 .75rem; line-height:1.5;">
+                        Based on the 4% safe withdrawal rule.
+                    </p>
+                    <div class="result-row glass-raised">
+                        <span style="color:#d1d5db; font-size:.875rem;">Monthly Investment Capacity</span>
+                        <span id="res-monthly-inv" style="font-weight:700; color:#00D285;">$0</span>
+                    </div>
+                    <div class="result-row glass-raised">
+                        <span style="color:#d1d5db; font-size:.875rem;">Estimated Time to Freedom</span>
+                        <span id="res-years" style="font-weight:700; color:#fff;">—</span>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-200 mb-1.5 flex items-center drop-shadow-sm">
-                            <i data-lucide="trending-up" class="w-4 h-4 mr-1 text-[#007A4D]"></i>
-                            Monthly Income (After Tax)
-                        </label>
-                        <input
-                            type="number"
-                            id="income"
-                            value="5000"
-                            placeholder="e.g. 5000"
-                            class="w-full glass-recessed rounded-xl px-4 py-3"
-                        />
-                    </div>
-
-                    <div id="empty-state" class="mt-8 border border-dashed border-white/20 rounded-2xl p-8 text-center text-gray-300 bg-black/20 backdrop-blur-sm flex flex-col items-center shadow-inner hidden">
-                        <i data-lucide="sparkles" class="w-8 h-8 text-gray-400 mb-3 drop-shadow-md"></i>
-                        <p>Enter your numbers above to reveal your financial freedom target.</p>
-                    </div>
-
-                    <div id="results-card" class="mt-8 glass-panel rounded-2xl p-6 relative overflow-hidden hidden animate-fade-in">
-                        <div class="absolute top-0 right-0 w-40 h-40 bg-[#FBB613] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
-
-                        <p class="text-gray-200 text-sm font-medium uppercase tracking-wider mb-2 text-center drop-shadow-md">
-                            Your Freedom Number
+                    <div class="glass-raised" style="border-radius:.75rem; padding:1rem; margin-top:1rem;">
+                        <h4 style="font-size:.875rem; font-weight:700; margin:0 0 .5rem;">What This Means</h4>
+                        <p style="font-size:.875rem; color:#e5e7eb; line-height:1.6; margin:0;">
+                            If you reach your Freedom Number of
+                            <span id="wtm-freedom-num" style="font-weight:700; color:#FBB613;"></span>,
+                            your investments could pay out about
+                            <span id="wtm-monthly-payout" style="font-weight:700; color:#FBB613;"></span>
+                            per month — enough to cover your expenses.
                         </p>
-
-                        <div id="res-freedom-num" class="text-4xl md:text-5xl font-black text-center text-white mb-6 drop-shadow-xl" style="text-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-                            $0
-                        </div>
-
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center glass-raised p-3 rounded-lg">
-                                <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Monthly Payout</span>
-                                <span id="res-monthly-payout" class="font-bold text-[#FBB613] drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">$0</span>
-                            </div>
-
-                            <div class="flex justify-between items-center glass-raised p-3 rounded-lg">
-                                <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Yearly Payout</span>
-                                <span id="res-yearly-payout" class="font-bold text-[#FBB613] drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">$0</span>
-                            </div>
-
-                            <p class="text-xs text-gray-400 text-center leading-relaxed pb-2 drop-shadow-sm">
-                                Monthly Payout is the estimated amount your investments could provide each month if you reach your Freedom Number, based on the 4% rule.
-                            </p>
-
-                            <div class="flex justify-between items-center glass-raised p-3 rounded-lg">
-                                <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Monthly Investment Capacity</span>
-                                <span id="res-monthly-inv" class="font-bold text-[#00D285] drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">$0</span>
-                            </div>
-
-                            <div class="flex justify-between items-center glass-raised p-3 rounded-lg">
-                                <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Estimated Time to Freedom</span>
-                                <span id="res-years" class="font-bold text-white drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">0 years</span>
-                            </div>
-                        </div>
-
-                        <div class="mt-5 glass-raised p-4 rounded-xl">
-                            <h4 class="text-sm font-bold text-white mb-2 drop-shadow-sm">What This Means</h4>
-                            <p class="text-sm text-gray-200 leading-relaxed drop-shadow-sm">
-                                If you reach your Freedom Number of
-                                <span id="wtm-freedom-num" class="font-bold text-[#FBB613]"></span>,
-                                your investments could pay out about
-                                <span id="wtm-monthly-payout" class="font-bold text-[#FBB613]"></span>
-                                per month. That means your investments could cover your current monthly expenses.
-                            </p>
-                        </div>
-
-                        <div class="mt-4 glass-raised p-4 rounded-xl">
-                            <h4 class="text-sm font-bold text-white mb-2 drop-shadow-sm">Important Reminder</h4>
-                            <p class="text-xs text-gray-400 leading-relaxed drop-shadow-sm">
-                                This calculator is only an estimate based on an 8% average return. Investment returns, expenses, and life circumstances can change. This tool is for educational purposes only.
-                            </p>
-                        </div>
-
-                        <button
-                            id="share-btn"
-                            type="button"
-                            class="w-full mt-6 glass-raised hover:bg-white/10 text-white font-semibold rounded-xl px-4 py-3 flex items-center justify-center cursor-pointer transition-colors"
-                        >
-                            <i data-lucide="share-2" class="w-4 h-4 mr-2"></i>
-                            Share My Result
-                        </button>
                     </div>
+
+                    <div class="glass-raised" style="border-radius:.75rem; padding:1rem; margin-top:.75rem;">
+                        <h4 style="font-size:.875rem; font-weight:700; margin:0 0 .5rem;">Important Reminder</h4>
+                        <p style="font-size:.75rem; color:#9ca3af; line-height:1.6; margin:0;">
+                            Estimates assume 8% average annual return. Investment returns, expenses, and life circumstances can change. For educational purposes only.
+                        </p>
+                    </div>
+
+                    <button id="share-btn" type="button" class="share-btn glass-raised">
+                        <i data-lucide="share-2" style="width:1rem; height:1rem; margin-right:.5rem;"></i>
+                        Share My Result
+                    </button>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Lucide icons on load
-            lucide.createIcons();
+<script>
+(function () {
+    function initIcons() {
+        if (window.lucide) { lucide.createIcons(); }
+    }
 
-            // Landing Page Elements
-            const emailInput = document.getElementById('email-input');
-            const submitBtn = document.getElementById('submit-btn');
-            const emailError = document.getElementById('email-error');
-            const landingPage = document.getElementById('landing-page');
-            
-            // Calculator Page Elements
-            const calculatorPage = document.getElementById('calculator-page');
-            const expInput = document.getElementById('expenses');
-            const savInput = document.getElementById('savings');
-            const incInput = document.getElementById('income');
-            const emptyState = document.getElementById('empty-state');
-            const resultsCard = document.getElementById('results-card');
+    var emailInput    = document.getElementById('email-input');
+    var emailError    = document.getElementById('email-error');
+    var submitBtn     = document.getElementById('submit-btn');
+    var landingPage   = document.getElementById('landing-page');
+    var calcPage      = document.getElementById('calculator-page');
+    var expInput      = document.getElementById('expenses');
+    var savInput      = document.getElementById('savings');
+    var incInput      = document.getElementById('income');
+    var resultsCard   = document.getElementById('results-card');
+    var resFreedomNum = document.getElementById('res-freedom-num');
+    var resMoPayout   = document.getElementById('res-monthly-payout');
+    var resYrPayout   = document.getElementById('res-yearly-payout');
+    var resMoInv      = document.getElementById('res-monthly-inv');
+    var resYears      = document.getElementById('res-years');
+    var wtmFreedom    = document.getElementById('wtm-freedom-num');
+    var wtmPayout     = document.getElementById('wtm-monthly-payout');
+    var shareBtn      = document.getElementById('share-btn');
 
-            // Result Display Elements
-            const resFreedomNum = document.getElementById('res-freedom-num');
-            const resMonthlyPayout = document.getElementById('res-monthly-payout');
-            const resYearlyPayout = document.getElementById('res-yearly-payout');
-            const resMonthlyInv = document.getElementById('res-monthly-inv');
-            const resYears = document.getElementById('res-years');
-            const wtmFreedomNum = document.getElementById('wtm-freedom-num');
-            const wtmMonthlyPayout = document.getElementById('wtm-monthly-payout');
-            const shareBtn = document.getElementById('share-btn');
+    function fmt(n) {
+        return new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 }).format(n);
+    }
 
-            let currentFreedomNumber = 0;
+    function isEmail(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    }
 
-            const formatCurrency = (num) => {
-                return new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD',
-                    maximumFractionDigits: 0
-                }).format(num);
-            };
+    function calc() {
+        var exp = parseFloat(expInput.value)  || 0;
+        var sav = parseFloat(savInput.value)  || 0;
+        var inc = parseFloat(incInput.value)  || 0;
 
-            const transitionToCalculator = () => {
-                landingPage.classList.add('hidden');
-                calculatorPage.classList.remove('hidden');
-                calculatorPage.classList.add('animate-fade-in');
-                updateCalculations(); // Calculate default values instantly
-                lucide.createIcons(); // Re-initialize icons if needed
-            };
+        if (exp <= 0) { resultsCard.style.display = 'none'; return; }
 
-            const isValidEmail = (email) => {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            };
+        var freedom  = exp * 12 * 25;
+        var moPayout = freedom * 0.04 / 12;
+        var yrPayout = freedom * 0.04;
+        var moInvest = Math.max(0, inc - exp);
 
-            const handleOptIn = async () => {
-                const emailValue = emailInput.value.trim();
+        var yearsLabel;
+        if (sav >= freedom) {
+            yearsLabel = 'Already free! 🎉';
+        } else if (moInvest <= 0) {
+            yearsLabel = 'Increase income or cut expenses';
+        } else {
+            var r = 0.08 / 12;
+            var n = Math.log((((freedom - sav) * r) / moInvest) + 1) / Math.log(1 + r);
+            var y = Math.ceil(n / 12);
+            yearsLabel = isFinite(y) ? y + ' year' + (y !== 1 ? 's' : '') : 'Very long time';
+        }
 
-                if (!emailValue || !isValidEmail(emailValue)) {
-                    emailError.classList.remove('hidden');
-                    emailInput.focus();
-                    return;
-                }
+        resFreedomNum.textContent = fmt(freedom);
+        resMoPayout.textContent   = fmt(moPayout);
+        resYrPayout.textContent   = fmt(yrPayout);
+        resMoInv.textContent      = fmt(moInvest);
+        resYears.textContent      = yearsLabel;
+        wtmFreedom.textContent    = fmt(freedom);
+        wtmPayout.textContent     = fmt(moPayout);
 
-                emailError.classList.add('hidden');
+        resultsCard.style.display = 'block';
+    }
 
-                // Save locally in case you want to use it later
-                localStorage.setItem('freedom_calc_email', emailValue);
+    function showCalculator() {
+        landingPage.style.display = 'none';
+        calcPage.style.display    = 'block';
+        calcPage.classList.add('fade-in');
+        calc();
+        initIcons();
+    }
 
-                // Move to calculator immediately
-                transitionToCalculator();
+    submitBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var val = emailInput.value.trim();
+        if (!val || !isEmail(val)) {
+            emailError.style.display = 'block';
+            return;
+        }
+        emailError.style.display = 'none';
+        showCalculator();
 
-                // Send to Formspree in background (Silent Catch)
-                try {
-                    fetch('https://formspree.io/f/mykggoqy', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: emailValue,
-                            source: 'Melanin Unity Freedom Number Calculator'
-                        })
-                    }).catch(() => {});
-                } catch (error) {
-                    console.error('Formspree submission failed:', error);
-                }
-            };
+        fetch('https://formspree.io/f/mykggoqy', {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: val, source: 'Melanin Unity Freedom Calculator' })
+        }).catch(function () {});
+    });
 
-            function updateCalculations() {
-                const expenses = parseFloat(expInput.value) || 0;
-                const savings = parseFloat(savI
+    emailInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            submitBtn.click();
+        }
+    });
+
+    expInput.addEventListener('input', calc);
+    savInput.addEv
