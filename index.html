@@ -25,11 +25,11 @@
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.5); /* Strong edge reflection */
-            border-left: 1px solid rgba(255, 255, 255, 0.3); /* Soft side reflection */
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 
-                0 20px 40px -10px rgba(0, 0, 0, 0.7), /* Deep drop shadow */
-                inset 0 1px 2px rgba(255, 255, 255, 0.5), /* Inner rim highlight */
+                0 20px 40px -10px rgba(0, 0, 0, 0.7), 
+                inset 0 1px 2px rgba(255, 255, 255, 0.5), 
                 inset 0 -1px 2px rgba(0, 0, 0, 0.2);
         }
 
@@ -51,9 +51,9 @@
         .glass-recessed {
             background: rgba(0, 0, 0, 0.35);
             border: 1px solid transparent;
-            border-top: 1px solid rgba(0, 0, 0, 0.8); /* Dark top border for depth */
+            border-top: 1px solid rgba(0, 0, 0, 0.8);
             border-left: 1px solid rgba(0, 0, 0, 0.6);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Bottom rim light */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.7);
             color: white;
@@ -62,7 +62,7 @@
         
         .glass-recessed:focus {
             background: rgba(0, 0, 0, 0.5);
-            border-bottom: 1px solid #FBB613; /* Pan-African Gold focus */
+            border-bottom: 1px solid #FBB613;
             box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.8), 0 2px 15px rgba(251, 182, 19, 0.25);
             outline: none;
         }
@@ -71,10 +71,10 @@
         .gel-button {
             background: linear-gradient(180deg, #00A166 0%, #007A4D 100%);
             border: 1px solid #005A39;
-            border-top: 1px solid #00D285; /* Bright top highlight */
+            border-top: 1px solid #00D285;
             box-shadow: 
                 0 8px 20px -5px rgba(0, 122, 77, 0.6), 
-                inset 0 2px 2px rgba(255, 255, 255, 0.5), /* Inner top glare */
+                inset 0 2px 2px rgba(255, 255, 255, 0.5), 
                 inset 0 -2px 4px rgba(0, 0, 0, 0.2);
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
@@ -99,7 +99,7 @@
 </head>
 <body class="bg-black text-white font-sans overflow-x-hidden min-h-screen relative flex items-center justify-center p-4">
 
-    <!-- Dynamic Pan-African Background Orbs (Increased Opacity for better light bleed through the glass) -->
+    <!-- Dynamic Pan-African Background Orbs -->
     <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#E22428] rounded-full mix-blend-screen filter blur-[120px] opacity-50 animate-pulse pointer-events-none"></div>
     <div class="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-[#007A4D] rounded-full mix-blend-screen filter blur-[130px] opacity-50 animate-pulse pointer-events-none" style="animation-delay: 2s;"></div>
     <div class="fixed top-[40%] left-[30%] w-[40vw] h-[40vw] bg-[#FBB613] rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-pulse pointer-events-none" style="animation-delay: 4s;"></div>
@@ -326,7 +326,14 @@
             }).format(num);
         };
 
-        // Handle Form Submission (Formspree)
+        // Function to smoothly transition to the calculator
+        const transitionToCalculator = () => {
+            landingPage.classList.add('hidden');
+            calculatorPage.classList.remove('hidden');
+            calculatorPage.classList.add('animate-fade-in');
+        };
+
+        // Handle Form Submission (Formspree with Fail-safe Transition)
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -347,22 +354,19 @@
                 });
 
                 if (response.ok) {
-                    // Transition to calculator
-                    landingPage.classList.add('hidden');
-                    calculatorPage.classList.remove('hidden');
-                    calculatorPage.classList.add('animate-fade-in');
+                    transitionToCalculator();
                 } else {
                     const data = await response.json();
-                    if (Object.hasOwn(data, 'errors')) {
+                    if (data && Object.hasOwn(data, 'errors')) {
+                        // Real validation error from Formspree (e.g. invalid email format)
                         errorMsg.textContent = data.errors.map(error => error.message).join(", ");
+                        errorMsg.classList.remove('hidden');
                     } else {
-                        errorMsg.textContent = "Oops! There was a problem submitting your form.";
+                        // Unknown error, but let's not block the user
+                        transitionToCalculator(); 
                     }
-                    errorMsg.classList.remove('hidden');
                 }
             } catch (err) {
-                errorMsg.textContent = "Network error. Please try again.";
-                errorMsg.classList.remove('hidden');
-            } finally {
-                // Reset loading state
-                
+                // If CORS is blocked or it's run in a strict sandbox, fetch throws an error.
+                // We bypass this and let the user access the tool anyway!
+                console.log("Formspree request blocked by environment, transitioning a
