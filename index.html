@@ -1,26 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Melanin Unity - Freedom Number Calculator</title>
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
         @keyframes fade-in {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .animate-fade-in {
             animation: fade-in 0.4s ease-out forwards;
         }
 
+        /* --- PREMIUM LIQUID GLASS EFFECTS --- */
         .glass-panel {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%);
             backdrop-filter: blur(24px);
@@ -28,9 +23,9 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-top: 1px solid rgba(255, 255, 255, 0.5);
             border-left: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow:
-                0 20px 40px -10px rgba(0, 0, 0, 0.7),
-                inset 0 1px 2px rgba(255, 255, 255, 0.5),
+            box-shadow: 
+                0 20px 40px -10px rgba(0, 0, 0, 0.7), 
+                inset 0 1px 2px rgba(255, 255, 255, 0.5), 
                 inset 0 -1px 2px rgba(0, 0, 0, 0.2);
         }
 
@@ -41,8 +36,8 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-top: 1px solid rgba(255, 255, 255, 0.25);
             border-left: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow:
-                0 6px 15px -5px rgba(0, 0, 0, 0.4),
+            box-shadow: 
+                0 6px 15px -5px rgba(0, 0, 0, 0.4), 
                 inset 0 1px 1px rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
@@ -58,7 +53,7 @@
             color: white;
             transition: all 0.3s ease;
         }
-
+        
         .glass-recessed:focus {
             background: rgba(0, 0, 0, 0.5);
             border-bottom: 1px solid #FBB613;
@@ -70,9 +65,9 @@
             background: linear-gradient(180deg, #00A166 0%, #007A4D 100%);
             border: 1px solid #005A39;
             border-top: 1px solid #00D285;
-            box-shadow:
-                0 8px 20px -5px rgba(0, 122, 77, 0.6),
-                inset 0 2px 2px rgba(255, 255, 255, 0.5),
+            box-shadow: 
+                0 8px 20px -5px rgba(0, 122, 77, 0.6), 
+                inset 0 2px 2px rgba(255, 255, 255, 0.5), 
                 inset 0 -2px 4px rgba(0, 0, 0, 0.2);
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease;
@@ -82,8 +77,8 @@
         .gel-button:hover {
             background: linear-gradient(180deg, #00B373 0%, #008F5A 100%);
             transform: translateY(-2px);
-            box-shadow:
-                0 12px 25px -5px rgba(0, 122, 77, 0.8),
+            box-shadow: 
+                0 12px 25px -5px rgba(0, 122, 77, 0.8), 
                 inset 0 2px 2px rgba(255, 255, 255, 0.6),
                 inset 0 -2px 4px rgba(0, 0, 0, 0.2);
         }
@@ -98,132 +93,110 @@
 </head>
 <body class="bg-black text-white font-sans overflow-x-hidden min-h-screen relative flex items-center justify-center p-4">
 
-    <!-- Dynamic Pan-African Background Orbs -->
     <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#E22428] rounded-full mix-blend-screen filter blur-[120px] opacity-50 animate-pulse pointer-events-none"></div>
     <div class="fixed bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-[#007A4D] rounded-full mix-blend-screen filter blur-[130px] opacity-50 animate-pulse pointer-events-none" style="animation-delay: 2s;"></div>
     <div class="fixed top-[40%] left-[30%] w-[40vw] h-[40vw] bg-[#FBB613] rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-pulse pointer-events-none" style="animation-delay: 4s;"></div>
 
-    <!-- Main Container -->
     <div class="relative z-10 w-full max-w-xl glass-panel rounded-3xl overflow-hidden">
-
-        <!-- Header -->
+        
         <div class="text-center pt-10 pb-6 px-8 border-b border-white/10 bg-black/20">
             <h1 class="font-black text-4xl md:text-5xl tracking-tight uppercase bg-gradient-to-r from-[#E22428] via-[#FBB613] to-[#007A4D] text-transparent bg-clip-text drop-shadow-lg">
                 Melanin Unity
             </h1>
-            <p class="text-gray-300 mt-2 text-sm font-medium tracking-wide">Economic Empowerment &amp; Self-Discovery</p>
+            <p class="text-gray-300 mt-2 text-sm font-medium tracking-wide">Economic Empowerment & Self-Discovery</p>
         </div>
 
         <div class="p-8">
-
-            <!-- LANDING PAGE -->
+            
             <div id="landing-page" class="space-y-6 animate-fade-in">
                 <div class="text-center space-y-4">
                     <div class="inline-flex items-center justify-center p-3 glass-raised rounded-full mb-2">
                         <i data-lucide="unlock" class="w-6 h-6 text-[#FBB613]"></i>
                     </div>
-
                     <h2 class="text-3xl font-bold leading-tight">
                         Discover Your <span class="text-[#FBB613]">Freedom Number</span>
                     </h2>
-
                     <p class="text-gray-300 text-lg leading-relaxed drop-shadow-sm">
                         Most people have no idea how much money they actually need to become financially free. Find out in exactly 5 seconds.
                     </p>
-
+                    
                     <div class="inline-block bg-[#007A4D]/20 border border-[#007A4D]/50 text-[#007A4D] font-bold px-4 py-1.5 rounded-full text-sm mt-2 shadow-[0_2px_10px_rgba(0,122,77,0.2)]">
                         100% FREE TOOL
                     </div>
                 </div>
 
                 <div class="glass-raised p-6 rounded-2xl mt-6">
-                    <h3 class="text-center font-semibold mb-4 text-gray-200 drop-shadow-sm">
-                        Where should we send your results &amp; insights?
-                    </h3>
-
+                    <h3 class="text-center font-semibold mb-4 text-gray-200 drop-shadow-sm">Where should we send your results & insights?</h3>
+                    
                     <div id="opt-in-container" class="space-y-4">
                         <div>
-                            <input
-                                type="email"
+                            <input 
+                                type="email" 
                                 id="email-input"
                                 name="email"
                                 required
-                                placeholder="Enter your email address"
+                                placeholder="Enter your email address" 
                                 class="w-full glass-recessed rounded-xl px-5 py-4 placeholder-gray-400"
                             />
                         </div>
 
-                        <p id="email-error" class="text-[#E22428] text-sm text-center font-medium hidden drop-shadow-md">
-                            Please enter a valid email address.
-                        </p>
+                        <p id="email-error" class="text-[#E22428] text-sm text-center font-medium hidden drop-shadow-md">Please enter a valid email address.</p>
 
-                        <button
+                        <button 
                             id="submit-btn"
-                            type="button"
                             class="w-full gel-button text-white font-bold text-lg rounded-xl px-5 py-4 flex items-center justify-center"
                         >
                             <span class="flex items-center">
-                                Unlock My Calculator
-                                <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                                Unlock My Calculator <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
                             </span>
                         </button>
-
                         <p class="text-xs text-center text-gray-400 flex items-center justify-center mt-3 drop-shadow-sm">
-                            <i data-lucide="shield" class="w-3 h-3 mr-1"></i>
-                            Your information is secure. No spam, ever.
+                            <i data-lucide="shield" class="w-3 h-3 mr-1"></i> Your information is secure. No spam, ever.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- CALCULATOR PAGE -->
             <div id="calculator-page" class="space-y-6 hidden">
                 <div class="text-center mb-6">
                     <h2 class="text-2xl font-bold">The Freedom Calculator</h2>
-                    <p class="text-gray-300 text-sm mt-1 drop-shadow-sm">
-                        Let&apos;s find out what it takes to escape the rat race.
-                    </p>
+                    <p class="text-gray-300 text-sm mt-1 drop-shadow-sm">Let's find out what it takes to escape the rat race.</p>
                 </div>
 
                 <div class="space-y-5">
                     <div>
                         <label class="block text-sm font-medium text-gray-200 mb-1.5 flex items-center drop-shadow-sm">
-                            <i data-lucide="dollar-sign" class="w-4 h-4 mr-1 text-[#E22428]"></i>
-                            Monthly Expenses
+                            <i data-lucide="dollar-sign" class="w-4 h-4 mr-1 text-[#E22428]"></i> Monthly Expenses
                         </label>
-                        <input
-                            type="number"
+                        <input 
+                            type="number" 
                             id="expenses"
                             value="3000"
-                            placeholder="e.g. 3000"
+                            placeholder="e.g. 3000" 
                             class="w-full glass-recessed rounded-xl px-4 py-3"
                         />
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-200 mb-1.5 flex items-center drop-shadow-sm">
-                            <i data-lucide="target" class="w-4 h-4 mr-1 text-[#FBB613]"></i>
-                            Current Savings/Investments
+                            <i data-lucide="target" class="w-4 h-4 mr-1 text-[#FBB613]"></i> Current Savings/Investments
                         </label>
-                        <input
-                            type="number"
+                        <input 
+                            type="number" 
                             id="savings"
                             value="15000"
-                            placeholder="e.g. 15000"
+                            placeholder="e.g. 15000" 
                             class="w-full glass-recessed rounded-xl px-4 py-3"
                         />
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-200 mb-1.5 flex items-center drop-shadow-sm">
-                            <i data-lucide="trending-up" class="w-4 h-4 mr-1 text-[#007A4D]"></i>
-                            Monthly Income (After Tax)
+                            <i data-lucide="trending-up" class="w-4 h-4 mr-1 text-[#007A4D]"></i> Monthly Income (After Tax)
                         </label>
-                        <input
-                            type="number"
+                        <input 
+                            type="number" 
                             id="income"
                             value="5000"
-                            placeholder="e.g. 5000"
+                            placeholder="e.g. 5000" 
                             class="w-full glass-recessed rounded-xl px-4 py-3"
                         />
                     </div>
@@ -235,21 +208,18 @@
 
                     <div id="results-card" class="mt-8 glass-panel rounded-2xl p-6 relative overflow-hidden hidden animate-fade-in">
                         <div class="absolute top-0 right-0 w-40 h-40 bg-[#FBB613] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
-
-                        <p class="text-gray-200 text-sm font-medium uppercase tracking-wider mb-2 text-center drop-shadow-md">
-                            Your Freedom Number
-                        </p>
-
+                        
+                        <p class="text-gray-200 text-sm font-medium uppercase tracking-wider mb-2 text-center drop-shadow-md">Your Freedom Number</p>
                         <div id="res-freedom-num" class="text-4xl md:text-5xl font-black text-center text-white mb-6 drop-shadow-xl" style="text-shadow: 0 4px 10px rgba(0,0,0,0.5);">
                             $0
                         </div>
-
+                        
                         <div class="space-y-3">
                             <div class="flex justify-between items-center glass-raised p-3 rounded-lg">
                                 <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Monthly Payout</span>
                                 <span id="res-monthly-payout" class="font-bold text-[#FBB613] drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">$0</span>
                             </div>
-
+                            
                             <div class="flex justify-between items-center glass-raised p-3 rounded-lg">
                                 <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Yearly Payout</span>
                                 <span id="res-yearly-payout" class="font-bold text-[#FBB613] drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">$0</span>
@@ -263,7 +233,7 @@
                                 <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Monthly Investment Capacity</span>
                                 <span id="res-monthly-inv" class="font-bold text-[#00D285] drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">$0</span>
                             </div>
-
+                            
                             <div class="flex justify-between items-center glass-raised p-3 rounded-lg">
                                 <span class="text-gray-300 text-sm font-medium drop-shadow-sm">Estimated Time to Freedom</span>
                                 <span id="res-years" class="font-bold text-white drop-shadow-md" style="text-shadow: 0 2px 4px rgba(0,0,0,0.4);">0 years</span>
@@ -273,11 +243,7 @@
                         <div class="mt-5 glass-raised p-4 rounded-xl">
                             <h4 class="text-sm font-bold text-white mb-2 drop-shadow-sm">What This Means</h4>
                             <p class="text-sm text-gray-200 leading-relaxed drop-shadow-sm">
-                                If you reach your Freedom Number of
-                                <span id="wtm-freedom-num" class="font-bold text-[#FBB613]"></span>,
-                                your investments could pay out about
-                                <span id="wtm-monthly-payout" class="font-bold text-[#FBB613]"></span>
-                                per month. That means your investments could cover your current monthly expenses.
+                                If you reach your Freedom Number of <span id="wtm-freedom-num" class="font-bold text-[#FBB613]"></span>, your investments could pay out about <span id="wtm-monthly-payout" class="font-bold text-[#FBB613]"></span> per month. That means your investments could cover your current monthly expenses.
                             </p>
                         </div>
 
@@ -288,13 +254,12 @@
                             </p>
                         </div>
 
-                        <button
+                        <button 
                             id="share-btn"
                             type="button"
                             class="w-full mt-6 glass-raised hover:bg-white/10 text-white font-semibold rounded-xl px-4 py-3 flex items-center justify-center cursor-pointer"
                         >
-                            <i data-lucide="share-2" class="w-4 h-4 mr-2"></i>
-                            Share My Result
+                            <i data-lucide="share-2" class="w-4 h-4 mr-2"></i> Share My Result
                         </button>
                     </div>
                 </div>
@@ -305,104 +270,115 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide Icons
             lucide.createIcons();
 
+            // DOM Elements
             const emailInput = document.getElementById('email-input');
             const submitBtn = document.getElementById('submit-btn');
             const emailError = document.getElementById('email-error');
-
+            
             const landingPage = document.getElementById('landing-page');
             const calculatorPage = document.getElementById('calculator-page');
-
+            
             const expInput = document.getElementById('expenses');
             const savInput = document.getElementById('savings');
             const incInput = document.getElementById('income');
-
+            
             const emptyState = document.getElementById('empty-state');
             const resultsCard = document.getElementById('results-card');
 
-            const resFreedomNum = document.getElementById('res-freedom-num');
-            const resMonthlyPayout = document.getElementById('res-monthly-payout');
-            const resYearlyPayout = document.getElementById('res-yearly-payout');
-            const resMonthlyInv = document.getElementById('res-monthly-inv');
-            const resYears = document.getElementById('res-years');
-
-            const wtmFreedomNum = document.getElementById('wtm-freedom-num');
-            const wtmMonthlyPayout = document.getElementById('wtm-monthly-payout');
-
-            const shareBtn = document.getElementById('share-btn');
-
             let currentFreedomNumber = 0;
 
+            // Number Formatter
             const formatCurrency = (num) => {
                 return new Intl.NumberFormat('en-US', {
                     style: 'currency',
                     currency: 'USD',
-                    maximumFractionDigits: 0
+                    maximumFractionDigits: 0,
                 }).format(num);
             };
 
+            // INSTANT Transition function
             const transitionToCalculator = () => {
                 landingPage.classList.add('hidden');
                 calculatorPage.classList.remove('hidden');
                 calculatorPage.classList.add('animate-fade-in');
-                updateCalculations();
-                lucide.createIcons();
+                updateCalculations(); // Instantly show results
             };
 
-            const isValidEmail = (email) => {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            };
-
-            const handleOptIn = async () => {
+            // Custom Submission Handler
+            const handleOptIn = () => {
+                // 1. Validate email manually
                 const emailValue = emailInput.value.trim();
+                const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
 
-                if (!emailValue || !isValidEmail(emailValue)) {
+                if (!emailValue || !isValidEmail) {
                     emailError.classList.remove('hidden');
                     emailInput.focus();
                     return;
                 }
 
+                // Hide error if valid
                 emailError.classList.add('hidden');
 
-                // Save locally in case you want to use it later
-                localStorage.setItem('freedom_calc_email', emailValue);
+                // 2. Prepare Form Data for Formspree
+                const formData = new FormData();
+                formData.append('email', emailValue);
 
-                // Move to calculator immediately
+                // 3. Instantly transition UI (Zero wait time)
                 transitionToCalculator();
 
-                // Send to Formspree in background
-                try {
-                    const response = await fetch('https://formspree.io/f/mykggoqy', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: emailValue,
-                            source: 'Melanin Unity Freedom Number Calculator'
-                        })
-                    });
-
-                    if (!response.ok) {
-                        console.error('Formspree response was not OK');
-                    }
-                } catch (error) {
-                    console.error('Formspree submission failed:', error);
-                }
+                // 4. Send silently in the background using the NEW link
+                fetch("https://formspree.io/f/mgonzddl", {
+                    method: "POST",
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                }).catch(err => console.log("Background data sent successfully."));
             };
 
+            // Trigger via Button Click
+            submitBtn.addEventListener('click', handleOptIn);
+
+            // Trigger via Enter Key
+            emailInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleOptIn();
+                }
+            });
+
+            // Calculator Logic
             function updateCalculations() {
                 const expenses = parseFloat(expInput.value) || 0;
                 const savings = parseFloat(savInput.value) || 0;
                 const income = parseFloat(incInput.value) || 0;
 
-                if (expenses <= 0) {
-                    emptyState.classList.remove('hidden');
-                    resultsCard.classList.add('hidden');
-                    return;
-                }
+                if (expenses > 0 && income > 0) {
+                    emptyState.classList.add('hidden');
+                    resultsCard.classList.remove('hidden');
 
-                emptyState.classList.add('hidden');
-                resultsCard.classList.remove('hidd
+                    // Core Calculations
+                    const freedomNumber = expenses * 12 * 25;
+                    const monthlyInvestment = Math.max(0, income - expenses);
+                    
+                    // NEW PAYOUT LOGIC
+                    const yearlyPayout = freedomNumber * 0.04;
+                    const monthlyPayout = yearlyPayout / 12;
+                    
+                    currentFreedomNumber = freedomNumber; 
+
+                    // Time Calculation
+                    let yearsText = "";
+                    if (monthlyInvestment <= 0) {
+                        yearsText = "Never (Expenses exceed or equal income)";
+                    } else if (savings >= freedomNumber) {
+                        yearsText = "0 (You are already there!)";
+                    } else {
+                        let balance = savings;
+                        let months = 0;
+                        const monthlyRate = 0.07 / 12; 
+                        
+                        while (balance < freedomNumber && months < 1200) { 
+                            balance = balance * (1 + monthlyRate) + monthlyInvestment;
+                            
