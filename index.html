@@ -143,6 +143,7 @@
                         <p id="email-error" class="text-[#E22428] text-sm text-center font-medium hidden drop-shadow-md">Please enter a valid email address.</p>
 
                         <button 
+                            type="button"
                             id="submit-btn"
                             class="w-full gel-button text-white font-bold text-lg rounded-xl px-5 py-4 flex items-center justify-center"
                         >
@@ -171,7 +172,6 @@
                         <input 
                             type="number" 
                             id="expenses"
-                            value="3000"
                             placeholder="e.g. 3000" 
                             class="w-full glass-recessed rounded-xl px-4 py-3"
                         />
@@ -183,7 +183,6 @@
                         <input 
                             type="number" 
                             id="savings"
-                            value="15000"
                             placeholder="e.g. 15000" 
                             class="w-full glass-recessed rounded-xl px-4 py-3"
                         />
@@ -195,13 +194,12 @@
                         <input 
                             type="number" 
                             id="income"
-                            value="5000"
                             placeholder="e.g. 5000" 
                             class="w-full glass-recessed rounded-xl px-4 py-3"
                         />
                     </div>
 
-                    <div id="empty-state" class="mt-8 border border-dashed border-white/20 rounded-2xl p-8 text-center text-gray-300 bg-black/20 backdrop-blur-sm flex flex-col items-center shadow-inner hidden">
+                    <div id="empty-state" class="mt-8 border border-dashed border-white/20 rounded-2xl p-8 text-center text-gray-300 bg-black/20 backdrop-blur-sm flex flex-col items-center shadow-inner">
                         <i data-lucide="sparkles" class="w-8 h-8 text-gray-400 mb-3 drop-shadow-md"></i>
                         <p>Enter your numbers above to reveal your financial freedom target.</p>
                     </div>
@@ -304,11 +302,12 @@
                 landingPage.classList.add('hidden');
                 calculatorPage.classList.remove('hidden');
                 calculatorPage.classList.add('animate-fade-in');
-                updateCalculations(); // Instantly show results
             };
 
-            // Custom Submission Handler
-            const handleOptIn = () => {
+            // Custom Submission Handler (No Form Tag Exists)
+            const handleOptIn = (e) => {
+                if (e) e.preventDefault(); // Stop any rogue browser actions
+
                 // 1. Validate email manually
                 const emailValue = emailInput.value.trim();
                 const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
@@ -329,22 +328,22 @@
                 // 3. Instantly transition UI (Zero wait time)
                 transitionToCalculator();
 
-                // 4. Send silently in the background using the NEW link
+                // 4. Send silently in the background using your NEW link
                 fetch("https://formspree.io/f/mgonzddl", {
                     method: "POST",
                     body: formData,
                     headers: { 'Accept': 'application/json' }
-                }).catch(err => console.log("Background data sent successfully."));
+                }).catch(err => console.log("Background data fetch caught."));
             };
 
             // Trigger via Button Click
             submitBtn.addEventListener('click', handleOptIn);
 
-            // Trigger via Enter Key
+            // Trigger via Enter Key (Replaces native form behavior)
             emailInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    handleOptIn();
+                    handleOptIn(e);
                 }
             });
 
@@ -381,4 +380,5 @@
                         
                         while (balance < freedomNumber && months < 1200) { 
                             balance = balance * (1 + monthlyRate) + monthlyInvestment;
-                            
+                            months++;
+              
