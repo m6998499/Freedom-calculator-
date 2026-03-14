@@ -409,6 +409,74 @@
 
         resFreedomNum.textContent = fmt(freedom);
         resMoPayout.textContent   = fmt(moPayout);
+<script>
+(function () {
+    function initIcons() {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    }
+
+    var emailInput    = document.getElementById('email-input');
+    var emailError    = document.getElementById('email-error');
+    var submitBtn     = document.getElementById('submit-btn');
+    var landingPage   = document.getElementById('landing-page');
+    var calcPage      = document.getElementById('calculator-page');
+    var expInput      = document.getElementById('expenses');
+    var savInput      = document.getElementById('savings');
+    var incInput      = document.getElementById('income');
+    var resultsCard   = document.getElementById('results-card');
+    var resFreedomNum = document.getElementById('res-freedom-num');
+    var resMoPayout   = document.getElementById('res-monthly-payout');
+    var resYrPayout   = document.getElementById('res-yearly-payout');
+    var resMoInv      = document.getElementById('res-monthly-inv');
+    var resYears      = document.getElementById('res-years');
+    var wtmFreedom    = document.getElementById('wtm-freedom-num');
+    var wtmPayout     = document.getElementById('wtm-monthly-payout');
+    var shareBtn      = document.getElementById('share-btn');
+
+    function fmt(n) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        }).format(n);
+    }
+
+    function isEmail(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    }
+
+    function calc() {
+        var exp = parseFloat(expInput.value) || 0;
+        var sav = parseFloat(savInput.value) || 0;
+        var inc = parseFloat(incInput.value) || 0;
+
+        if (exp <= 0) {
+            resultsCard.style.display = 'none';
+            return;
+        }
+
+        var freedom  = exp * 12 * 25;
+        var moPayout = freedom * 0.04 / 12;
+        var yrPayout = freedom * 0.04;
+        var moInvest = Math.max(0, inc - exp);
+
+        var yearsLabel;
+
+        if (sav >= freedom) {
+            yearsLabel = 'Already free! 🎉';
+        } else if (moInvest <= 0) {
+            yearsLabel = 'Increase income or cut expenses';
+        } else {
+            var r = 0.08 / 12;
+            var n = Math.log((((freedom - sav) * r) / moInvest) + 1) / Math.log(1 + r);
+            var y = Math.ceil(n / 12);
+            yearsLabel = isFinite(y) ? y + ' year' + (y !== 1 ? 's' : '') : 'Very long time';
+        }
+
+        resFreedomNum.textContent = fmt(freedom);
+        resMoPayout.textContent   = fmt(moPayout);
         resYrPayout.textContent   = fmt(yrPayout);
         resMoInv.textContent      = fmt(moInvest);
         resYears.textContent      = yearsLabel;
@@ -465,4 +533,30 @@
     incInput.addEventListener('input', calc);
 
     if (shareBtn) {
-        shareB
+        shareBtn.addEventListener('click', function () {
+            var text = 'My Freedom Number is ' + resFreedomNum.textContent;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Freedom Number',
+                    text: text,
+                    url: window.location.href
+                }).catch(function () {});
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function () {
+                    alert('Result copied to clipboard!');
+                }).catch(function () {
+                    alert(text);
+                });
+            } else {
+                alert(text);
+            }
+        });
+    }
+
+    initIcons();
+})();
+</script>
+</script>
+</body>
+</html>
