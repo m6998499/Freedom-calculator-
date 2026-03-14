@@ -133,11 +133,11 @@
                 <div class="glass-raised p-6 rounded-2xl mt-6">
                     <h3 class="text-center font-semibold mb-4 text-gray-200 drop-shadow-sm">Where should we send your results & insights?</h3>
                     
-                    <!-- BULLETPROOF FORM: action="javascript:void(0);" explicitly prevents page reload -->
-                    <form id="opt-in-form" action="javascript:void(0);" class="space-y-4">
+                    <form id="opt-in-form" class="space-y-4">
                         <div>
                             <input 
                                 type="email" 
+                                id="email-input"
                                 name="email"
                                 required
                                 placeholder="Enter your email address" 
@@ -145,8 +145,9 @@
                             />
                         </div>
 
+                        <!-- CHANGED to type="button" to completely prevent page reloads -->
                         <button 
-                            type="submit" 
+                            type="button" 
                             id="submit-btn"
                             class="w-full gel-button text-white font-bold text-lg rounded-xl px-5 py-4 flex items-center justify-center"
                         >
@@ -213,7 +214,7 @@
                         <p>Enter your numbers above to reveal your financial freedom target.</p>
                     </div>
 
-                    <!-- --- RESULTS CARD (REVISED CONTENT & ORDER) --- -->
+                    <!-- --- RESULTS CARD --- -->
                     <div id="results-card" class="mt-8 glass-panel rounded-2xl p-6 relative overflow-hidden hidden animate-fade-in">
                         <div class="absolute top-0 right-0 w-40 h-40 bg-[#FBB613] opacity-15 rounded-full blur-3xl pointer-events-none"></div>
                         
@@ -293,6 +294,7 @@
 
             // DOM Elements
             const form = document.getElementById('opt-in-form');
+            const submitBtn = document.getElementById('submit-btn');
             const landingPage = document.getElementById('landing-page');
             const calculatorPage = document.getElementById('calculator-page');
             
@@ -322,30 +324,34 @@
                 updateCalculations(); // Instantly show results
             };
 
-            // Handle Form Submission with multiple safeguards
-            form.addEventListener('submit', (e) => {
-                // Prevent any native browser reload
+            // BUTTON CLICK HANDLER (Not Form Submit!)
+            submitBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopPropagation();
-                
-                try {
-                    const formData = new FormData(form);
-                    
-                    // Instantly transition and calculate without waiting for the network
-                    transitionToCalculator();
-                    
-                    // Send email to Formspree silently in background
-                    fetch("https://formspree.io/f/mykggoqy", {
-                        method: "POST",
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
-                    }).catch(err => console.log("Formspree fetch caught an error, user transitioned anyway."));
-                } catch (error) {
-                    console.error("Submission error caught:", error);
-                    transitionToCalculator(); // Failsafe fallback
+
+                // 1. Manually check if the email is valid before proceeding
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // This shows the "Please fill out this field" popup
+                    return;
                 }
+
+                // 2. Gather the form data
+                const formData = new FormData(form);
                 
-                return false; // Final safeguard
+                // 3. Instantly transition and calculate (0 delay)
+                transitionToCalculator();
+                
+                // 4. Send email to Formspree silently in background
+                fetch("https://formspree.io/f/mykggoqy", {
+                    method: "POST",
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                }).catch(err => console.log("Formspree data handled in background."));
+            });
+
+            // Prevent Enter key from reloading the page
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                submitBtn.click(); // Trigger the button logic instead
             });
 
             // Calculator Logic
@@ -371,6 +377,4 @@
                     // Time Calculation
                     let yearsText = "";
                     if (monthlyInvestment <= 0) {
-                        yearsText = "Never (Expenses exceed or equal income)";
-                    } else if (savings >= freedomNumber) {
-                        yearsText = "
+                        yearsText = "Never (Expenses 
