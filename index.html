@@ -133,7 +133,8 @@
                 <div class="glass-raised p-6 rounded-2xl mt-6">
                     <h3 class="text-center font-semibold mb-4 text-gray-200 drop-shadow-sm">Where should we send your results & insights?</h3>
                     
-                    <form id="opt-in-form" class="space-y-4">
+                    <!-- BULLETPROOF FORM: action="javascript:void(0);" explicitly prevents page reload -->
+                    <form id="opt-in-form" action="javascript:void(0);" class="space-y-4">
                         <div>
                             <input 
                                 type="email" 
@@ -147,7 +148,7 @@
                         <button 
                             type="submit" 
                             id="submit-btn"
-                            class="w-full gel-button text-white font-bold text-lg rounded-xl px-5 py-4 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+                            class="w-full gel-button text-white font-bold text-lg rounded-xl px-5 py-4 flex items-center justify-center"
                         >
                             <span id="btn-text" class="flex items-center">
                                 Unlock My Calculator <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
@@ -272,6 +273,7 @@
                         <!-- Share Button -->
                         <button 
                             id="share-btn"
+                            type="button"
                             class="w-full mt-6 glass-raised hover:bg-white/10 text-white font-semibold rounded-xl px-4 py-3 flex items-center justify-center cursor-pointer"
                         >
                             <i data-lucide="share-2" class="w-4 h-4 mr-2"></i> Share My Result
@@ -317,24 +319,33 @@
                 landingPage.classList.add('hidden');
                 calculatorPage.classList.remove('hidden');
                 calculatorPage.classList.add('animate-fade-in');
-                updateCalculations(); // Instantly show results since inputs are pre-filled
+                updateCalculations(); // Instantly show results
             };
 
-            // Handle Form Submission
+            // Handle Form Submission with multiple safeguards
             form.addEventListener('submit', (e) => {
+                // Prevent any native browser reload
                 e.preventDefault();
+                e.stopPropagation();
                 
-                const formData = new FormData(form);
+                try {
+                    const formData = new FormData(form);
+                    
+                    // Instantly transition and calculate without waiting for the network
+                    transitionToCalculator();
+                    
+                    // Send email to Formspree silently in background
+                    fetch("https://formspree.io/f/mykggoqy", {
+                        method: "POST",
+                        body: formData,
+                        headers: { 'Accept': 'application/json' }
+                    }).catch(err => console.log("Formspree fetch caught an error, user transitioned anyway."));
+                } catch (error) {
+                    console.error("Submission error caught:", error);
+                    transitionToCalculator(); // Failsafe fallback
+                }
                 
-                // Instantly transition and calculate
-                transitionToCalculator();
-                
-                // Send email to Formspree silently in background
-                fetch("https://formspree.io/f/mykggoqy", {
-                    method: "POST",
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                }).catch(err => console.log("Background submission noted."));
+                return false; // Final safeguard
             });
 
             // Calculator Logic
@@ -362,18 +373,4 @@
                     if (monthlyInvestment <= 0) {
                         yearsText = "Never (Expenses exceed or equal income)";
                     } else if (savings >= freedomNumber) {
-                        yearsText = "0 (You are already there!)";
-                    } else {
-                        let balance = savings;
-                        let months = 0;
-                        const monthlyRate = 0.07 / 12; 
-                        
-                        while (balance < freedomNumber && months < 1200) { 
-                            balance = balance * (1 + monthlyRate) + monthlyInvestment;
-                            months++;
-                        }
-                        yearsText = (months / 12).toFixed(1) + " years";
-                    }
-
-                    // Update DOM elements
-         
+                        yearsText = "
