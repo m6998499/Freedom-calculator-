@@ -454,4 +454,40 @@
         });
 
         emailInput.addEventListener('keydown', function (e) {
-        
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitBtn.click();
+            }
+        });
+
+        expInput.addEventListener('input', calc);
+        savInput.addEventListener('input', calc);
+        incInput.addEventListener('input', calc);
+
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function () {
+                var text = 'My Freedom Number is ' + resFreedomNum.textContent;
+
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'My Freedom Number',
+                        text: text,
+                        url: window.location.href
+                    }).catch(function () {});
+                } else if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(function () {
+                        alert('Result copied to clipboard!');
+                    }).catch(function () {
+                        alert(text);
+                    });
+                } else {
+                    alert(text);
+                }
+            });
+        }
+
+        initIcons();
+    })();
+    </script>
+</body>
+</html>
